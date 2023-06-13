@@ -32,6 +32,11 @@ public class ItemProdutoDAOJdbc implements ItemProdutoDAO {
             pstmt.setInt(2, item.getProduto().getId());
             pstmt.setInt(3, item.getQuantidade());
             pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                int id = rs.getInt(1);
+                item.setId(id);
+            }
             conn.commit();
         } catch (SQLException ex) {
             throw new DaoException(ex);

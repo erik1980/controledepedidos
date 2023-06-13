@@ -27,6 +27,11 @@ public class ProdutoDAOJdbc implements ProdutoDAO {
             pstmt.setString(2, produto.getDescricao());
             pstmt.setFloat(3, produto.getPrecoUnitario());
             pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                int id = rs.getInt(1);
+                produto.setId(id);
+            }
             conn.commit();
         } catch (SQLException ex) {
             throw new DaoException(ex);
@@ -37,8 +42,7 @@ public class ProdutoDAOJdbc implements ProdutoDAO {
     public void remove(int id) throws DaoException {
         String sql = "delete from produtos"
                 + " where id_produto = ?";
-        try (Connection conn = JDBCUtil.getConnection(); 
-                PreparedStatement pstmt = conn.prepareStatement(sql);) {
+        try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
             conn.commit();
@@ -51,8 +55,7 @@ public class ProdutoDAOJdbc implements ProdutoDAO {
     public void update(Produto produto) throws DaoException {
         String sql = "update produtos set codigo_produto = ? descricao = ?, preco_unitario = ? "
                 + "where id_produto = ?";
-        try (Connection conn = JDBCUtil.getConnection(); 
-                PreparedStatement pstmt = conn.prepareStatement(sql);) {
+        try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
             pstmt.setInt(1, produto.getCodigo());
             pstmt.setString(2, produto.getDescricao());
             pstmt.setFloat(3, produto.getPrecoUnitario());
@@ -68,8 +71,7 @@ public class ProdutoDAOJdbc implements ProdutoDAO {
     public List<Produto> findByDescricao(String descricao) throws DaoException {
         String sql = "select * from produtos "
                 + "where descricao like ?";
-        try (Connection conn = JDBCUtil.getConnection(); 
-                PreparedStatement pstmt = conn.prepareStatement(sql);) {
+        try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
             pstmt.setString(1, descricao + "%");
             try (ResultSet rs = pstmt.executeQuery();) {
                 List<Produto> listaProdutos = new ArrayList<>();
@@ -93,8 +95,7 @@ public class ProdutoDAOJdbc implements ProdutoDAO {
         String sql = "select * from produtos "
                 + "where codigo_produto = ?";
         Optional<Produto> obtionalProduto = Optional.empty();
-        try (Connection conn = JDBCUtil.getConnection(); 
-                PreparedStatement pstmt = conn.prepareStatement(sql);) {
+        try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
             pstmt.setInt(1, codigo);
             try (ResultSet rs = pstmt.executeQuery();) {
                 if (rs.first()) {
@@ -116,8 +117,7 @@ public class ProdutoDAOJdbc implements ProdutoDAO {
     @Override
     public List<Produto> findAll() throws DaoException {
         String sql = "select * from produtos";
-        try (Connection conn = JDBCUtil.getConnection(); 
-                PreparedStatement pstmt = conn.prepareStatement(sql);) {
+        try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
             try (ResultSet rs = pstmt.executeQuery();) {
                 List<Produto> listaProdutos = new ArrayList<>();
                 while (rs.next()) {

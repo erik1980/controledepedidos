@@ -38,15 +38,13 @@ public class PedidoDAOJdbc implements PedidoDAO {
                 pedido.setId(id);
             }
             conn.commit();
-
         } catch (SQLException ex) {
             throw new DaoException(ex);
-        }
+        }        
         ItemProdutoDAO itemProdutoDAO = new ItemProdutoDAOJdbc();
         for (ItemProduto it : pedido.getItensProdutos()) {
             itemProdutoDAO.add(it);
         }
-
     }
 
     @Override
@@ -134,6 +132,7 @@ public class PedidoDAOJdbc implements PedidoDAO {
         List<Pedido> listaPedidos = new ArrayList<>();
         try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
             ResultSet rs = pstmt.executeQuery();
+            ItemProdutoDAO itemProdutoDAO = new ItemProdutoDAOJdbc();
             while (rs.next()) {
                 Fornecedor fornecedor = new Fornecedor();
                 fornecedor.setId(rs.getInt("id_fornecedor"));
@@ -145,7 +144,6 @@ public class PedidoDAOJdbc implements PedidoDAO {
                 pedido.setId(rs.getInt("id_pedido"));
                 pedido.setCodigo(rs.getInt("codigo_pedido"));
                 pedido.setData(rs.getDate("data_pedido").toLocalDate());
-                ItemProdutoDAO itemProdutoDAO = new ItemProdutoDAOJdbc();
                 List<ItemProduto> itensPedidos = itemProdutoDAO.findByIdPedido(pedido.getId());
                 pedido.addItens(itensPedidos);
                 listaPedidos.add(pedido);
@@ -167,6 +165,7 @@ public class PedidoDAOJdbc implements PedidoDAO {
         try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
             pstmt.setDate(1, Date.valueOf(data));
             ResultSet rs = pstmt.executeQuery();
+            ItemProdutoDAO itemProdutoDAO = new ItemProdutoDAOJdbc();
             while (rs.next()) {
                 Fornecedor fornecedor = new Fornecedor();
                 fornecedor.setId(rs.getInt("id_fornecedor"));
@@ -178,7 +177,6 @@ public class PedidoDAOJdbc implements PedidoDAO {
                 pedido.setId(rs.getInt("id_pedido"));
                 pedido.setCodigo(rs.getInt("codigo_pedido"));
                 pedido.setData(rs.getDate("data_pedido").toLocalDate());
-                ItemProdutoDAO itemProdutoDAO = new ItemProdutoDAOJdbc();
                 List<ItemProduto> itensPedidos = itemProdutoDAO.findByIdPedido(pedido.getId());
                 pedido.addItens(itensPedidos);
                 listaPedidos.add(pedido);
@@ -200,6 +198,7 @@ public class PedidoDAOJdbc implements PedidoDAO {
         try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
+            ItemProdutoDAO itemProdutoDAO = new ItemProdutoDAOJdbc();
             while (rs.next()) {
                 //mejorar
                 Fornecedor fornecedor = new Fornecedor();
@@ -212,7 +211,6 @@ public class PedidoDAOJdbc implements PedidoDAO {
                 pedido.setId(rs.getInt("id_pedido"));
                 pedido.setCodigo(rs.getInt("codigo_pedido"));
                 pedido.setData(rs.getDate("data_pedido").toLocalDate());
-                ItemProdutoDAO itemProdutoDAO = new ItemProdutoDAOJdbc();
                 List<ItemProduto> itensPedidos = itemProdutoDAO.findByIdPedido(pedido.getId());
                 pedido.addItens(itensPedidos);
                 listaPedidos.add(pedido);
