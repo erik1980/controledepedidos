@@ -87,7 +87,9 @@ public class GerirProdutosViewController implements Initializable {
             listaProdutos.clear();
             if (rbTodos.isSelected()) { 
                 txtBuscar.clear();
+                oldlistaProdutos.clear();
                 listaProdutos.setAll(produtoService.findAll());
+                oldlistaProdutos.addAll(listaProdutos);
             } else if (!txtBuscar.getText().isBlank()) {
                 if (rbDescricao.isSelected()) {                   
                     listaProdutos.setAll(produtoService.findByDescricao(txtBuscar.getText()));

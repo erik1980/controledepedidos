@@ -90,7 +90,9 @@ public class GerirFornecedoresViewController implements Initializable {
             listaFornecedores.clear();
             if (rbTodos.isSelected()) {
                 txtBuscar.clear();
-                listaFornecedores.setAll(fornecedorService.findAll());
+                oldlistaFornecedores.clear();
+                listaFornecedores.setAll(fornecedorService.findAll());                
+                oldlistaFornecedores.addAll(listaFornecedores);
             } else if (!txtBuscar.getText().isBlank()) {
                 if (rbNome.isSelected()) {
                     listaFornecedores.setAll(fornecedorService.findByNome(txtBuscar.getText()));
@@ -142,15 +144,12 @@ public class GerirFornecedoresViewController implements Initializable {
         } else {
             try {
                 Fornecedor selectedFornecedor = tblFornecedores.getSelectionModel().getSelectedItem();
-                if (selectedFornecedor.getId() == 0) {
-                    selectedFornecedor.setCodigo(Integer.parseInt(txtCodigo.getText()));
-                    selectedFornecedor.setNome(txtNome.getText());
-                    selectedFornecedor.setPais(txtPais.getText());
+                selectedFornecedor.setCodigo(Integer.parseInt(txtCodigo.getText()));
+                selectedFornecedor.setNome(txtNome.getText());
+                selectedFornecedor.setPais(txtPais.getText());
+                if (selectedFornecedor.getId() == 0) {    
                     fornecedorService.add(selectedFornecedor);
                 } else {
-                    selectedFornecedor.setCodigo(Integer.parseInt(txtCodigo.getText()));
-                    selectedFornecedor.setNome(txtNome.getText());
-                    selectedFornecedor.setPais(txtPais.getText());
                     fornecedorService.update(selectedFornecedor);
                 }
                 for (Fornecedor fornecedor : toRemoveListaFornecedores) {

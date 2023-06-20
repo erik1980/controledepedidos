@@ -79,7 +79,7 @@ public class GerirPedidosViewController implements Initializable {
 
     @FXML
     private TableColumn<Pedido, Fornecedor> tcolNomeFornecedor;
-    
+
     @FXML
     private TableColumn<Pedido, Float> tcolTotal;
 
@@ -119,8 +119,11 @@ public class GerirPedidosViewController implements Initializable {
             listaPedidos.clear();
             if (rbTodos.isSelected()) {
                 txtBuscar.clear();
+                oldlistaPedidos.clear();
                 dtpBuscar.setValue(null);
                 listaPedidos.setAll(pedidoService.findAll());
+                oldlistaPedidos.addAll(listaPedidos);
+
             } else if (rbData.isSelected()) {
                 LocalDate data = dtpBuscar.getValue();
                 List<Pedido> newListaPedidos = pedidoService.findByData(data);
@@ -164,7 +167,7 @@ public class GerirPedidosViewController implements Initializable {
         } else {
             toRemoveListaPedidos.add(tblPedidos.getSelectionModel().getSelectedItem());
             listaPedidos.remove(tblPedidos.getSelectionModel().getSelectedItem());
-        } 
+        }
 
     }
 
@@ -265,14 +268,14 @@ public class GerirPedidosViewController implements Initializable {
 
                 {
                     btn.setOnAction((ActionEvent event) -> {
-                        try {                            
+                        try {
                             Pedido selectedPedido = getTableView().getItems().get(getIndex());
-                            tblPedidos.getSelectionModel().select(selectedPedido);                           
+                            tblPedidos.getSelectionModel().select(selectedPedido);
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/DetalhesPedidoView.fxml"));
                             Parent root = loader.load();
                             DetalhesPedidoViewController controller = loader.getController();
                             controller.setPedido(selectedPedido);
-                            Scene scene = new Scene(root);                    
+                            Scene scene = new Scene(root);
                             Stage stage = new Stage();
                             stage.setScene(scene);
                             stage.show();
@@ -290,7 +293,7 @@ public class GerirPedidosViewController implements Initializable {
                     if (empty) {
                         setGraphic(null);
                     } else {
-                        setGraphic(btn);                       
+                        setGraphic(btn);
                     }
                 }
             };
@@ -308,7 +311,7 @@ public class GerirPedidosViewController implements Initializable {
                 dtpData.setValue(newValue.getData());
                 //Isso aconetce por desajeitado.
                 Optional<Fornecedor> optionalFornecedor = listaFornecedores.stream()
-                        .filter(fornecedor -> newValue.getFornecedor()!= null && fornecedor.getId() == newValue.getFornecedor().getId())
+                        .filter(fornecedor -> newValue.getFornecedor() != null && fornecedor.getId() == newValue.getFornecedor().getId())
                         .findFirst();
                 if (optionalFornecedor.isPresent()) {
                     cmbFornecedores.setValue(optionalFornecedor.get());

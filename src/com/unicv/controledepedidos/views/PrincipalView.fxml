@@ -20,7 +20,7 @@
                   <Font name="DejaVu Sans Mono Bold" size="16.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#handlePedidosButtonAction" prefHeight="30.0" prefWidth="140.0" text="Fornecedores">
+            <Button mnemonicParsing="false" onAction="#handleFornecedoresButtonAction" prefHeight="30.0" prefWidth="140.0" text="Fornecedores">
                <font>
                   <Font name="DejaVu Sans Mono Bold" size="16.0" />
                </font>
