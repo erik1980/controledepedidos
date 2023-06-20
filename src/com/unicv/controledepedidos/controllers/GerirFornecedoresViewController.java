@@ -75,7 +75,7 @@ public class GerirFornecedoresViewController implements Initializable {
 
     private ObservableList<Fornecedor> listaFornecedores;
 
-    private final List<Fornecedor> oldlistaFornecedores = new ArrayList<>();
+    private final List<Fornecedor> oldListaFornecedores = new ArrayList<>();
 
     private final List<Fornecedor> toRemoveListaFornecedores = new ArrayList<>();
 
@@ -90,9 +90,9 @@ public class GerirFornecedoresViewController implements Initializable {
             listaFornecedores.clear();
             if (rbTodos.isSelected()) {
                 txtBuscar.clear();
-                oldlistaFornecedores.clear();
-                listaFornecedores.setAll(fornecedorService.findAll());                
-                oldlistaFornecedores.addAll(listaFornecedores);
+                oldListaFornecedores.clear();
+                listaFornecedores.setAll(fornecedorService.findAll());
+                oldListaFornecedores.addAll(listaFornecedores);
             } else if (!txtBuscar.getText().isBlank()) {
                 if (rbNome.isSelected()) {
                     listaFornecedores.setAll(fornecedorService.findByNome(txtBuscar.getText()));
@@ -147,7 +147,7 @@ public class GerirFornecedoresViewController implements Initializable {
                 selectedFornecedor.setCodigo(Integer.parseInt(txtCodigo.getText()));
                 selectedFornecedor.setNome(txtNome.getText());
                 selectedFornecedor.setPais(txtPais.getText());
-                if (selectedFornecedor.getId() == 0) {    
+                if (selectedFornecedor.getId() == 0) {
                     fornecedorService.add(selectedFornecedor);
                 } else {
                     fornecedorService.update(selectedFornecedor);
@@ -155,10 +155,14 @@ public class GerirFornecedoresViewController implements Initializable {
                 for (Fornecedor fornecedor : toRemoveListaFornecedores) {
                     fornecedorService.remove(fornecedor.getId());
                 }
-                oldlistaFornecedores.clear();
-                oldlistaFornecedores.addAll(listaFornecedores);
+                oldListaFornecedores.clear();
+                oldListaFornecedores.addAll(listaFornecedores);
                 tblFornecedores.setDisable(false);
                 btnAdicionar.setDisable(false);
+            } catch (NumberFormatException ex) {
+                String mssg = "O valor inserido não tem o formato correto";
+                showAlertMessage(Alert.AlertType.ERROR, "Error",
+                        "Erro atualozando um fornecedor", mssg);
             } catch (ServiceException ex) {
                 showAlertMessage(Alert.AlertType.ERROR, "Error",
                         "Error atualizando o fornecedor", ex.getMessage());
@@ -169,7 +173,7 @@ public class GerirFornecedoresViewController implements Initializable {
 
     public void handleCancelarButtonAction() {
         listaFornecedores.clear();
-        listaFornecedores.setAll(oldlistaFornecedores);
+        listaFornecedores.setAll(oldListaFornecedores);
         tblFornecedores.setDisable(false);
         btnAdicionar.setDisable(false);
         toRemoveListaFornecedores.clear();
@@ -184,7 +188,7 @@ public class GerirFornecedoresViewController implements Initializable {
         listaFornecedores = FXCollections.emptyObservableList();
         try {
             listaFornecedores = FXCollections.observableList(fornecedorService.findAll());
-            oldlistaFornecedores.addAll(listaFornecedores);
+            oldListaFornecedores.addAll(listaFornecedores);
         } catch (ServiceException ex) {
             showAlertMessage(Alert.AlertType.ERROR, "Erro",
                     "Erro carregando os fornecedores", ex.getMessage());

@@ -72,7 +72,7 @@ public class GerirProdutosViewController implements Initializable {
 
     private ObservableList<Produto> listaProdutos;
 
-    private final List<Produto> oldlistaProdutos = new ArrayList<>();
+    private final List<Produto> oldListaProdutos = new ArrayList<>();
 
     private final List<Produto> toRemoveListaProdutos = new ArrayList<>();
 
@@ -85,17 +85,17 @@ public class GerirProdutosViewController implements Initializable {
     public void handleBuscarProdutoButtonAction() {
         try {
             listaProdutos.clear();
-            if (rbTodos.isSelected()) { 
+            if (rbTodos.isSelected()) {
                 txtBuscar.clear();
-                oldlistaProdutos.clear();
+                oldListaProdutos.clear();
                 listaProdutos.setAll(produtoService.findAll());
-                oldlistaProdutos.addAll(listaProdutos);
+                oldListaProdutos.addAll(listaProdutos);
             } else if (!txtBuscar.getText().isBlank()) {
-                if (rbDescricao.isSelected()) {                   
+                if (rbDescricao.isSelected()) {
                     listaProdutos.setAll(produtoService.findByDescricao(txtBuscar.getText()));
 
                 } else {
-                    int codigo = Integer.parseInt(txtBuscar.getText());                   
+                    int codigo = Integer.parseInt(txtBuscar.getText());
                     Optional<Produto> optionalProduto = produtoService.findByCodigo(codigo);
                     optionalProduto.ifPresent((produto) -> {
                         listaProdutos.add(produto);
@@ -140,24 +140,25 @@ public class GerirProdutosViewController implements Initializable {
         } else {
             try {
                 Produto selectedProduto = tblProdutos.getSelectionModel().getSelectedItem();
+                selectedProduto.setCodigo(Integer.parseInt(txtCodigo.getText()));
+                selectedProduto.setDescricao(txtDescricao.getText());
+                selectedProduto.setPrecoUnitario(Float.parseFloat(txtPrecoUn.getText()));
                 if (selectedProduto.getId() == 0) {
-                    selectedProduto.setCodigo(Integer.parseInt(txtCodigo.getText()));
-                    selectedProduto.setDescricao(txtDescricao.getText());
-                    selectedProduto.setPrecoUnitario(Float.parseFloat(txtPrecoUn.getText()));
                     produtoService.add(selectedProduto);
                 } else {
-                    selectedProduto.setCodigo(Integer.parseInt(txtCodigo.getText()));
-                    selectedProduto.setDescricao(txtDescricao.getText());
-                    selectedProduto.setPrecoUnitario(Float.parseFloat(txtPrecoUn.getText()));
                     produtoService.update(selectedProduto);
                 }
                 for (Produto produto : toRemoveListaProdutos) {
                     produtoService.remove(produto.getId());
                 }
-                oldlistaProdutos.clear();
-                oldlistaProdutos.addAll(listaProdutos);
+                oldListaProdutos.clear();
+                oldListaProdutos.addAll(listaProdutos);
                 tblProdutos.setDisable(false);
                 btnAdicionar.setDisable(false);
+            } catch (NumberFormatException ex) {
+                String mssg = "O valor inserido não tem o formato correto";
+                showAlertMessage(Alert.AlertType.ERROR, "Error",
+                        "Erro atualizando um produto", mssg);
             } catch (ServiceException ex) {
                 showAlertMessage(Alert.AlertType.ERROR, "Error",
                         "Error atualizando o produto", ex.getMessage());
@@ -168,7 +169,7 @@ public class GerirProdutosViewController implements Initializable {
 
     public void handleCancelarButtonAction() {
         listaProdutos.clear();
-        listaProdutos.setAll(oldlistaProdutos);
+        listaProdutos.setAll(oldListaProdutos);
         tblProdutos.setDisable(false);
         btnAdicionar.setDisable(false);
         toRemoveListaProdutos.clear();
@@ -183,7 +184,7 @@ public class GerirProdutosViewController implements Initializable {
         listaProdutos = FXCollections.emptyObservableList();
         try {
             listaProdutos = FXCollections.observableList(produtoService.findAll());
-            oldlistaProdutos.addAll(listaProdutos);
+            oldListaProdutos.addAll(listaProdutos);
         } catch (ServiceException ex) {
             showAlertMessage(Alert.AlertType.ERROR, "Erro",
                     "Erro carregando os produtos", ex.getMessage());
@@ -193,7 +194,7 @@ public class GerirProdutosViewController implements Initializable {
         tcolDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
         tcolPrecoUnitario.setCellValueFactory(new PropertyValueFactory<>("precoUnitario"));
         tblProdutos.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
-             if (oldValue != null) {
+            if (oldValue != null) {
                 txtCodigo.clear();
                 txtDescricao.clear();
                 txtPrecoUn.clear();
@@ -204,7 +205,8 @@ public class GerirProdutosViewController implements Initializable {
                 txtPrecoUn.setText(Float.toString(newValue.getPrecoUnitario()));
             }
         });
-    }    
+    }
+
     private Optional<ButtonType> showAlertMessage(Alert.AlertType type, String title,
             String headerText, String mssg) {
         Alert alert = new Alert(type);

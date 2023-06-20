@@ -102,7 +102,7 @@ public class GerirPedidosViewController implements Initializable {
 
     private ObservableList<Fornecedor> listaFornecedores;
 
-    private final List<Pedido> oldlistaPedidos = new ArrayList<>();
+    private final List<Pedido> oldListaPedidos = new ArrayList<>();
 
     private final List<Pedido> toRemoveListaPedidos = new ArrayList<>();
 
@@ -119,10 +119,10 @@ public class GerirPedidosViewController implements Initializable {
             listaPedidos.clear();
             if (rbTodos.isSelected()) {
                 txtBuscar.clear();
-                oldlistaPedidos.clear();
+                oldListaPedidos.clear();
                 dtpBuscar.setValue(null);
                 listaPedidos.setAll(pedidoService.findAll());
-                oldlistaPedidos.addAll(listaPedidos);
+                oldListaPedidos.addAll(listaPedidos);
 
             } else if (rbData.isSelected()) {
                 LocalDate data = dtpBuscar.getValue();
@@ -190,10 +190,14 @@ public class GerirPedidosViewController implements Initializable {
                 for (Pedido pedido : toRemoveListaPedidos) {
                     pedidoService.remove(pedido.getId());
                 }
-                oldlistaPedidos.clear();
-                oldlistaPedidos.addAll(listaPedidos);
+                oldListaPedidos.clear();
+                oldListaPedidos.addAll(listaPedidos);
                 tblPedidos.setDisable(false);
                 btnAdicionar.setDisable(false);
+            } catch (NumberFormatException ex) {
+                String mssg = "O valor inserido não tem o formato correto";
+                showAlertMessage(Alert.AlertType.ERROR, "Error",
+                        "Erro atualizando um pedido", mssg);
             } catch (ServiceException ex) {
                 showAlertMessage(Alert.AlertType.ERROR, "Error",
                         "Error atualizando o fornecedor", ex.getMessage());
@@ -205,7 +209,7 @@ public class GerirPedidosViewController implements Initializable {
 
     public void handleCancelarButtonAction() {
         listaPedidos.clear();
-        listaPedidos.setAll(oldlistaPedidos);
+        listaPedidos.setAll(oldListaPedidos);
         tblPedidos.setDisable(false);
         btnAdicionar.setDisable(false);
         toRemoveListaPedidos.clear();
@@ -230,7 +234,7 @@ public class GerirPedidosViewController implements Initializable {
         try {
             listaPedidos = FXCollections.observableArrayList();
             listaPedidos.setAll(pedidoService.findAll());
-            oldlistaPedidos.addAll(listaPedidos);
+            oldListaPedidos.addAll(listaPedidos);
         } catch (ServiceException ex) {
             showAlertMessage(Alert.AlertType.ERROR, "Erro",
                     "Erro carregando os pedidos", ex.getMessage());
