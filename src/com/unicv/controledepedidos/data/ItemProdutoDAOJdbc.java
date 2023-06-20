@@ -27,7 +27,7 @@ public class ItemProdutoDAOJdbc implements ItemProdutoDAO {
     public void add(ItemProduto item) throws DaoException {
         String sql = "insert into itens_produtos(pedido_id, produto_id, quantidade)"
                 + "values(?, ?, ?)";
-        try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
+        try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
             pstmt.setInt(1, item.getPedido().getId());
             pstmt.setInt(2, item.getProduto().getId());
             pstmt.setInt(3, item.getQuantidade());

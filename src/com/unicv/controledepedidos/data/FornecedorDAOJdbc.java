@@ -22,7 +22,7 @@ public class FornecedorDAOJdbc implements FornecedorDAO {
     public void add(Fornecedor fornecedor) throws DaoException {
         String sql = "insert into fornecedores(codigo_fornecedor, nome_fornecedor, pais)"
                 + "values(?, ?, ?)";
-        try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
+        try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);) {
             pstmt.setInt(1, fornecedor.getCodigo());
             pstmt.setString(2, fornecedor.getNome());
             pstmt.setString(3, fornecedor.getPais());
@@ -34,7 +34,7 @@ public class FornecedorDAOJdbc implements FornecedorDAO {
             }
             conn.commit();
         } catch (SQLException ex) {
-            throw new DaoException(ex);
+            throw new DaoException(ex);         
         }
     }
 
@@ -62,6 +62,28 @@ public class FornecedorDAOJdbc implements FornecedorDAO {
             pstmt.setInt(4, fornecedor.getId());
             pstmt.executeUpdate();
             conn.commit();
+        } catch (SQLException ex) {
+            throw new DaoException(ex);
+        }
+    }
+
+    @Override
+    public Optional<Fornecedor> findById(int id) throws DaoException {
+        String sql = "select * from fornecedores "
+                + "where id_fornecedor = ?";
+        Optional<Fornecedor> optionalFornecedor = Optional.empty();
+        try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery();) {
+                if (rs.next()) {
+                    Fornecedor fornecedor = new Fornecedor();
+                    fornecedor.setCodigo(rs.getInt("codigo_fornecedor"));
+                    fornecedor.setNome(rs.getString("nome_fornecedor"));
+                    fornecedor.setPais(rs.getString("pais"));
+                    optionalFornecedor = Optional.of(fornecedor);
+                }
+                return optionalFornecedor;
+            }
         } catch (SQLException ex) {
             throw new DaoException(ex);
         }
@@ -120,6 +142,7 @@ public class FornecedorDAOJdbc implements FornecedorDAO {
                 List<Fornecedor> listaFornecedores = new ArrayList<>();
                 while (rs.next()) {
                     Fornecedor fornecedor = new Fornecedor();
+                    fornecedor.setId(rs.getInt("id_fornecedor"));
                     fornecedor.setCodigo(rs.getInt("codigo_fornecedor"));
                     fornecedor.setNome(rs.getString("nome_fornecedor"));
                     fornecedor.setPais(rs.getString("pais"));

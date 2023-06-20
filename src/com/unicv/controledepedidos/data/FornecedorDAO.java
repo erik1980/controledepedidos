@@ -20,6 +20,8 @@ public interface FornecedorDAO {
     public void remove(int id) throws DaoException;
 
     public void update(Fornecedor fornecedor) throws DaoException;
+    
+    public Optional<Fornecedor>  findById(int id) throws DaoException;
 
     public Optional<Fornecedor>  findByCodigo(int codigo) throws DaoException;
     

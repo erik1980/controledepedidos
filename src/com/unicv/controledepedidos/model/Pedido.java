@@ -31,7 +31,7 @@ public class Pedido {
 
     private final ObjectProperty<LocalDate> data = new SimpleObjectProperty<>(this, "data");
 
-    private final ObjectProperty<Fornecedor> fornecedor = new SimpleObjectProperty<>(this, "fornecedot");
+    private final ObjectProperty<Fornecedor> fornecedor = new SimpleObjectProperty<>(this, "fornecedor");
 
     private final ObservableList<ItemProduto> itensProdutos;
 
@@ -157,7 +157,7 @@ public class Pedido {
         this.itensProdutos.remove(item);
     }
 
-    public void removeItem(ObservableList<ItemProduto> itens) {
+    public void removeItens(List<ItemProduto> itens) {
         this.itensProdutos.removeAll(itens);
     }
 

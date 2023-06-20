@@ -21,7 +21,7 @@ public class Produto {
 
     private final IntegerProperty codigo = new SimpleIntegerProperty(this, "codigo", 0);
 
-    private final StringProperty descricao = new SimpleStringProperty(this, "descricao");
+    private final StringProperty descricao = new SimpleStringProperty(this, "descricao","");
 
     private final FloatProperty precoUnitario = new SimpleFloatProperty(this, "precoUnitario", 0);
 

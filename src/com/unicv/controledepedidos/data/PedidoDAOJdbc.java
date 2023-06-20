@@ -8,13 +8,11 @@ import com.unicv.controledepedidos.exceptions.DaoException;
 import com.unicv.controledepedidos.model.Fornecedor;
 import com.unicv.controledepedidos.model.ItemProduto;
 import com.unicv.controledepedidos.model.Pedido;
-import com.unicv.controledepedidos.model.Produto;
 import com.unicv.controledepedidos.utils.JDBCUtil;
 import java.time.LocalDate;
 import java.util.List;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Optional;
 
 /**
@@ -40,7 +38,7 @@ public class PedidoDAOJdbc implements PedidoDAO {
             conn.commit();
         } catch (SQLException ex) {
             throw new DaoException(ex);
-        }        
+        }
         ItemProdutoDAO itemProdutoDAO = new ItemProdutoDAOJdbc();
         for (ItemProduto it : pedido.getItensProdutos()) {
             itemProdutoDAO.add(it);
@@ -126,6 +124,39 @@ public class PedidoDAOJdbc implements PedidoDAO {
     }
 
     @Override
+    public Optional<Pedido> findByCodigo(int codigo) throws DaoException {
+        String sql = "select * from pedidos join fornecedores on "
+                + "pedidos.fornecedor_id = fornecedores.id_fornecedor "
+                + "where codigo_pedido = ?";
+        Optional<Pedido> obtionalPedido = Optional.empty();
+        try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
+            pstmt.setInt(1, codigo);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Fornecedor fornecedor = new Fornecedor();
+                fornecedor.setId(rs.getInt("id_fornecedor"));
+                fornecedor.setCodigo(rs.getInt("codigo_fornecedor"));
+                fornecedor.setNome(rs.getString("nome_fornecedor"));
+                fornecedor.setPais(rs.getString("pais"));
+                Pedido pedido = new Pedido();
+                pedido.setFornecedor(fornecedor);
+                pedido.setId(rs.getInt("id_pedido"));
+                pedido.setCodigo(rs.getInt("codigo_pedido"));
+                pedido.setData(rs.getDate("data_pedido").toLocalDate());
+                ItemProdutoDAO itemProdutoDAO = new ItemProdutoDAOJdbc();
+                List<ItemProduto> itensPedidos = itemProdutoDAO.findByIdPedido(codigo);
+                pedido.addItens(itensPedidos);
+                obtionalPedido = Optional.of(pedido);
+            }
+
+        } catch (SQLException ex) {
+            throw new DaoException(ex);
+        }
+
+        return obtionalPedido;
+    }
+
+    @Override
     public List<Pedido> findAll() throws DaoException {
         String sql = "select * from pedidos join fornecedores on "
                 + "pedidos.fornecedor_id = fornecedores.id_fornecedor ";
@@ -190,7 +221,7 @@ public class PedidoDAOJdbc implements PedidoDAO {
     }
 
     @Override
-    public List<Pedido> findByFornecedor(int id) throws DaoException {
+    public List<Pedido> findByIdFornecedor(int id) throws DaoException {
         String sql = "select * from pedidos join fornecedores on "
                 + "pedidos.fornecedor_id = fornecedores.id_fornecedor "
                 + "where id_fornecedor = ?";
@@ -200,7 +231,7 @@ public class PedidoDAOJdbc implements PedidoDAO {
             ResultSet rs = pstmt.executeQuery();
             ItemProdutoDAO itemProdutoDAO = new ItemProdutoDAOJdbc();
             while (rs.next()) {
-                //mejorar
+                //melhorar
                 Fornecedor fornecedor = new Fornecedor();
                 fornecedor.setId(rs.getInt("id_fornecedor"));
                 fornecedor.setCodigo(rs.getInt("codigo_fornecedor"));
@@ -220,6 +251,70 @@ public class PedidoDAOJdbc implements PedidoDAO {
             throw new DaoException(ex);
         }
 
+        return listaPedidos;
+    }
+
+    @Override
+    public List<Pedido> findByCodigoFornecedor(int codigo) throws DaoException {
+        String sql = "select * from pedidos join fornecedores on "
+                + "pedidos.fornecedor_id = fornecedores.id_fornecedor "
+                + "where codigo_fornecedor = ?";
+        List<Pedido> listaPedidos = new ArrayList<>();
+        try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
+            pstmt.setInt(1, codigo);
+            ResultSet rs = pstmt.executeQuery();
+            ItemProdutoDAO itemProdutoDAO = new ItemProdutoDAOJdbc();
+            while (rs.next()) {
+                //melhorar
+                Fornecedor fornecedor = new Fornecedor();
+                fornecedor.setId(rs.getInt("id_fornecedor"));
+                fornecedor.setCodigo(rs.getInt("codigo_fornecedor"));
+                fornecedor.setNome(rs.getString("nome_fornecedor"));
+                fornecedor.setPais(rs.getString("pais"));
+                Pedido pedido = new Pedido();
+                pedido.setFornecedor(fornecedor);
+                pedido.setId(rs.getInt("id_pedido"));
+                pedido.setCodigo(rs.getInt("codigo_pedido"));
+                pedido.setData(rs.getDate("data_pedido").toLocalDate());
+                List<ItemProduto> itensPedidos = itemProdutoDAO.findByIdPedido(pedido.getId());
+                pedido.addItens(itensPedidos);
+                listaPedidos.add(pedido);
+            }
+        } catch (SQLException ex) {
+            throw new DaoException(ex);
+        }
+        return listaPedidos;
+    }
+
+    @Override
+    public List<Pedido> findByNomeFornecedor(String nome) throws DaoException {
+        String sql = "select * from pedidos join fornecedores on "
+                + "pedidos.fornecedor_id = fornecedores.id_fornecedor "
+                + "where nome_fornecedor = ?";
+        List<Pedido> listaPedidos = new ArrayList<>();
+        try (Connection conn = JDBCUtil.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql);) {
+            pstmt.setString(1, nome);
+            ResultSet rs = pstmt.executeQuery();
+            ItemProdutoDAO itemProdutoDAO = new ItemProdutoDAOJdbc();
+            while (rs.next()) {
+                //melhorar
+                Fornecedor fornecedor = new Fornecedor();
+                fornecedor.setId(rs.getInt("id_fornecedor"));
+                fornecedor.setCodigo(rs.getInt("codigo_fornecedor"));
+                fornecedor.setNome(rs.getString("nome_fornecedor"));
+                fornecedor.setPais(rs.getString("pais"));
+                Pedido pedido = new Pedido();
+                pedido.setFornecedor(fornecedor);
+                pedido.setId(rs.getInt("id_pedido"));
+                pedido.setCodigo(rs.getInt("codigo_pedido"));
+                pedido.setData(rs.getDate("data_pedido").toLocalDate());
+                List<ItemProduto> itensPedidos = itemProdutoDAO.findByIdPedido(pedido.getId());
+                pedido.addItens(itensPedidos);
+                listaPedidos.add(pedido);
+            }
+        } catch (SQLException ex) {
+            throw new DaoException(ex);
+        }
         return listaPedidos;
     }
 

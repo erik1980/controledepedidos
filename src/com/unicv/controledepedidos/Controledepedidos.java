@@ -8,6 +8,7 @@ import com.unicv.controledepedidos.data.FornecedorDAOJdbc;
 import com.unicv.controledepedidos.data.ItemProdutoDAOJdbc;
 import com.unicv.controledepedidos.data.PedidoDAO;
 import com.unicv.controledepedidos.data.PedidoDAOJdbc;
+import com.unicv.controledepedidos.data.ProdutoDAOJdbc;
 import com.unicv.controledepedidos.exceptions.DaoException;
 import com.unicv.controledepedidos.model.Fornecedor;
 import com.unicv.controledepedidos.model.ItemProduto;
@@ -31,8 +32,8 @@ public class Controledepedidos {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        try {
-            FornecedorDAOJdbc fornecedorDAO = new FornecedorDAOJdbc();
+//        try {
+//            FornecedorDAOJdbc fornecedorDAO = new FornecedorDAOJdbc();
 //            Fornecedor forn1 = new Fornecedor(82, "Bosch", "Alemnaha");
 //            Fornecedor forn2 = new Fornecedor(23, "Makita", "Japão");
 //            Fornecedor forn3 = new Fornecedor(43, "Dewalt", "USA");
@@ -60,54 +61,60 @@ public class Controledepedidos {
 //            fornecedorDAO.remove(56);
 //            fornecedorDAO.remove(15);
 //            fornecedorDAO.update(new Fornecedor(86, "Itools", "Portulal"));
-            System.out.println("-------------------------------------------------------------");
-            Optional<Fornecedor> opt = fornecedorDAO.findByCodigo(43);
-            if (opt.isPresent()) {
-                Fornecedor forn = opt.get();
-                System.out.printf("Codigo: %d\nNome: %s\nPaia:%s\n", forn.getCodigo(), forn.getNome(), forn.getPais());
-            }
-            System.out.println("-------------------------------------------------------------");
-            List<Fornecedor> listFornecedores = fornecedorDAO.findAll();
-            listFornecedores.forEach((it) -> {
-                System.out.printf("Codigo: %d\nNome: %s\nPaia:%s\n", it.getCodigo(), it.getNome(), it.getPais());
-                System.out.println();
-            });
-            System.out.println("-------------------------------------------------------------");
-            List<Fornecedor> listFornecedoresByNome = fornecedorDAO.findByNome("M");
-            listFornecedoresByNome.forEach((it) -> {
-                System.out.printf("Codigo: %d\nNome: %s\nPaia:%s\n", it.getCodigo(), it.getNome(), it.getPais());
-                System.out.println();
-            });
-            System.out.println("-------------------------------------------------------------");
-            ItemProdutoDAOJdbc itemProdutoDao = new ItemProdutoDAOJdbc();
-            List<ItemProduto> listItens = itemProdutoDao.findByIdPedido(12);
-            listItens.forEach((it)
-                    -> System.out.printf("%s\t%s\t\n", it.getPedido().getFornecedor().getNome(), it.getProduto().getDescricao())
-            );
-            Fornecedor forn = new Fornecedor(75, "Stanley", "USA");
-            forn.setId(22);
-            Pedido pedido = new Pedido(241, LocalDate.now(), forn);
-            //pedido.setId(28);
-            Produto produto1 = new Produto(843, "Agrafadores", 8000);
-            Produto produto2 = new Produto(633, "Lixadeira", 8000);
-            produto1.setId(4);
-            produto2.setId(3);
-            ItemProduto item1 = new ItemProduto(pedido, produto1, 498);
-          //  item1.setId(40);
-            ItemProduto item2 = new ItemProduto(pedido, produto2, 333);
-           // item2.setId(46);
-            pedido.addItem(item1);
-            pedido.addItem(item2);
-            PedidoDAO pedidoDAO = new PedidoDAOJdbc();
-            pedidoDAO.add(pedido);           
-           // pedidoDAO.update(pedido);
-            Pedido ped = pedidoDAO.findById(28).get();
-            pedidoDAO.findAll();
-            pedidoDAO.findByFornecedor(18);
-
+//            System.out.println("-------------------------------------------------------------");
+//            Optional<Fornecedor> opt = fornecedorDAO.findByCodigo(43);
+//            if (opt.isPresent()) {
+//                Fornecedor forn = opt.get();
+//                System.out.printf("Codigo: %d\nNome: %s\nPaia:%s\n", forn.getCodigo(), forn.getNome(), forn.getPais());
+//            }
+//            System.out.println("-------------------------------------------------------------");
+//            List<Fornecedor> listFornecedores = fornecedorDAO.findAll();
+//            listFornecedores.forEach((it) -> {
+//                System.out.printf("Codigo: %d\nNome: %s\nPaia:%s\n", it.getCodigo(), it.getNome(), it.getPais());
+//                System.out.println();
+//            });
+//            System.out.println("-------------------------------------------------------------");
+//            List<Fornecedor> listFornecedoresByNome = fornecedorDAO.findByNome("M");
+//            listFornecedoresByNome.forEach((it) -> {
+//                System.out.printf("Codigo: %d\nNome: %s\nPaia:%s\n", it.getCodigo(), it.getNome(), it.getPais());
+//                System.out.println();
+//            });
+//            System.out.println("-------------------------------------------------------------");
+//            ItemProdutoDAOJdbc itemProdutoDao = new ItemProdutoDAOJdbc();
+//            List<ItemProduto> listItens = itemProdutoDao.findByIdPedido(12);
+//            listItens.forEach((it)
+//                    -> System.out.printf("%s\t%s\t\n", it.getPedido().getFornecedor().getNome(), it.getProduto().getDescricao())
+//            );
+//            Fornecedor forn = new Fornecedor(75, "Stanley", "USA");
+//            forn.setId(22);
+//            Pedido pedido = new Pedido(241, LocalDate.now(), forn);
+//            //pedido.setId(28);
+//            Produto produto1 = new Produto(843, "Agrafadores", 8000);
+//            Produto produto2 = new Produto(633, "Lixadeira", 8000);
+//            produto1.setId(4);
+//            produto2.setId(3);
+//            ItemProduto item1 = new ItemProduto(pedido, produto1, 498);
+//          //  item1.setId(40);
+//            ItemProduto item2 = new ItemProduto(pedido, produto2, 333);
+//           // item2.setId(46);
+//            pedido.addItem(item1);
+//            pedido.addItem(item2);
+//            PedidoDAO pedidoDAO = new PedidoDAOJdbc();
+//            pedidoDAO.add(pedido);           
+//           // pedidoDAO.update(pedido);
+//         DAO.   Pedido ped = pedidoDAO.findById(28).get();
+//            pedidoDAO.findAll();
+//            pedidoDAO.findByFornecedor(18);
+//
+//        } catch (DaoException ex) {
+//            Logger.getLogger(Controledepedidos.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+ProdutoDAOJdbc p = new ProdutoDAOJdbc();
+        try {
+            p.remove(0);
         } catch (DaoException ex) {
             Logger.getLogger(Controledepedidos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
 }

@@ -14,7 +14,7 @@ import java.util.Optional;
  *
  * @author erik
  */
-public interface PedidoDAO{
+public interface PedidoDAO {
 
     public void add(Pedido ped) throws DaoException;
 
@@ -22,12 +22,18 @@ public interface PedidoDAO{
 
     public void update(Pedido ped) throws DaoException;
 
-    public Optional<Pedido>  findById(int id) throws DaoException;
+    public Optional<Pedido> findById(int id) throws DaoException;
+    
+    public Optional<Pedido> findByCodigo(int codigo) throws DaoException;
 
     public List<Pedido> findAll() throws DaoException;
 
     public List<Pedido> findByDate(LocalDate date) throws DaoException;
 
-    public List<Pedido> findByFornecedor(int idForn) throws DaoException;
+    public List<Pedido> findByIdFornecedor(int id) throws DaoException;
+
+    public List<Pedido> findByCodigoFornecedor(int codigo) throws DaoException;
+
+    public List<Pedido> findByNomeFornecedor(String nome) throws DaoException;
 
 }

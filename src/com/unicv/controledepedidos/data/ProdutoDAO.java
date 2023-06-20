@@ -21,6 +21,8 @@ public interface ProdutoDAO {
     
     public void update(Produto produto)  throws DaoException;
     
+    public Optional<Produto> findById(int id) throws DaoException;
+    
     public Optional<Produto> findByCodigo(int codigo) throws DaoException;
     
     public List<Produto> findByDescricao(String descricao) throws DaoException;
