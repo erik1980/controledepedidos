@@ -4,15 +4,11 @@
  */
 package com.unicv.controledepedidos.controllers;
 
-import com.unicv.controledepedidos.data.FornecedorDAOJdbc;
-import com.unicv.controledepedidos.data.PedidoDAOJdbc;
 import com.unicv.controledepedidos.exceptions.ServiceException;
 import com.unicv.controledepedidos.model.Fornecedor;
 import com.unicv.controledepedidos.model.Pedido;
-import com.unicv.controledepedidos.services.FornecedorService;
 import com.unicv.controledepedidos.services.IFornecedorService;
 import com.unicv.controledepedidos.services.IPedidoService;
-import com.unicv.controledepedidos.services.PedidoService;
 import com.unicv.controledepedidos.services.ServiceManager;
 import java.io.IOException;
 import java.net.URL;
@@ -216,24 +212,19 @@ public class GerirPedidosViewController implements Initializable {
         toRemoveListaPedidos.clear();
     }
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         pedidoService = ServiceManager.getServiceManager().getPedidoService();
         fornecedorService = ServiceManager.getServiceManager().getFornecedorService();
-        listaPedidos = FXCollections.emptyObservableList();
-        listaFornecedores = FXCollections.emptyObservableList();
+        listaFornecedores = FXCollections.observableArrayList();
+        listaPedidos = FXCollections.observableArrayList();
         try {
-            listaFornecedores = FXCollections.observableArrayList();
             listaFornecedores.setAll(fornecedorService.findAll());
         } catch (ServiceException ex) {
             showAlertMessage(Alert.AlertType.ERROR, "Erro",
                     "Erro carregando os forncedores", ex.getMessage());
         }
         try {
-            listaPedidos = FXCollections.observableArrayList();
             listaPedidos.setAll(pedidoService.findAll());
             oldListaPedidos.addAll(listaPedidos);
         } catch (ServiceException ex) {
@@ -245,6 +236,7 @@ public class GerirPedidosViewController implements Initializable {
         tcolData.setCellValueFactory(new PropertyValueFactory<>("data"));
         tcolNomeFornecedor.setCellValueFactory(new PropertyValueFactory<>("fornecedor"));
         tcolTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+
         tcolCodigo.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         tcolTotal.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
         tcolData.setCellFactory(TextFieldTableCell.forTableColumn(new LocalDateStringConverter()));
@@ -264,6 +256,7 @@ public class GerirPedidosViewController implements Initializable {
             }
         };
         tcolNomeFornecedor.setCellFactory(TextFieldTableCell.forTableColumn(fornecedorStringConverter));
+
         //Criar cell com Button para ver os itens de cada pedido na TableView      
         tcolDetalhes.setCellFactory((TableColumn<Pedido, Void> param) -> {
             final TableCell<Pedido, Void> cell = new TableCell<Pedido, Void>() {
@@ -272,7 +265,7 @@ public class GerirPedidosViewController implements Initializable {
                 {
                     btn.setOnAction((ActionEvent event) -> {
                         try {
-                            Pedido selectedPedido = getTableView().getItems().get(getIndex());
+                            Pedido selectedPedido = getTableView().getItems().get(getIndex());                         
                             tblPedidos.getSelectionModel().select(selectedPedido);
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/DetalhesPedidoView.fxml"));
                             Parent root = loader.load();
@@ -306,7 +299,7 @@ public class GerirPedidosViewController implements Initializable {
         tblPedidos.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (oldValue != null) {
                 txtCodigo.clear();
-                dtpBuscar.setValue(null);
+                dtpData.setValue(null);
                 cmbFornecedores.setValue(null);
             }
             if (newValue != null) {
@@ -321,7 +314,7 @@ public class GerirPedidosViewController implements Initializable {
                 }
 
                 //nós não podemos fazer isso
-             //   cmbFornecedores.setValue(newValue.getFornecedor());
+               //  cmbFornecedores.setValue(newValue.getFornecedor());
             }
         });
         cmbFornecedores.getItems().setAll(listaFornecedores);

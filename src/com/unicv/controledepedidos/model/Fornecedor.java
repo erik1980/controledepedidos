@@ -78,6 +78,7 @@ public class Fornecedor {
 
     public final StringProperty paisProperty() {
         return pais;
-    }
+    }    
+    
 
 }

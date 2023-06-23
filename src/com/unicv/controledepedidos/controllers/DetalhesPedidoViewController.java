@@ -4,13 +4,11 @@
  */
 package com.unicv.controledepedidos.controllers;
 
-import com.unicv.controledepedidos.data.ProdutoDAOJdbc;
 import com.unicv.controledepedidos.exceptions.ServiceException;
 import com.unicv.controledepedidos.model.ItemProduto;
 import com.unicv.controledepedidos.model.Pedido;
 import com.unicv.controledepedidos.model.Produto;
 import com.unicv.controledepedidos.services.IProdutoService;
-import com.unicv.controledepedidos.services.ProdutoService;
 import com.unicv.controledepedidos.services.ServiceManager;
 import java.net.URL;
 import java.util.ArrayList;
@@ -137,9 +135,6 @@ public class DetalhesPedidoViewController implements Initializable {
         toRemoveListaItensProdutos.clear();
     }
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         produtoService = ServiceManager.getServiceManager().getProdutoService();
@@ -152,7 +147,7 @@ public class DetalhesPedidoViewController implements Initializable {
         }
 
         ObservableList<ItemProduto> emptyListaProduto = FXCollections.emptyObservableList();
-        tblItemProduto.setItems(emptyListaProduto);    
+        tblItemProduto.setItems(emptyListaProduto);
         tblItemProduto.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (oldValue != null) {
                 txtQuantidadeProduto.setText(null);

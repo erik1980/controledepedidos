@@ -4,11 +4,9 @@
  */
 package com.unicv.controledepedidos.controllers;
 
-import com.unicv.controledepedidos.data.FornecedorDAOJdbc;
 import com.unicv.controledepedidos.exceptions.ServiceException;
 import com.unicv.controledepedidos.model.Fornecedor;
 import com.unicv.controledepedidos.services.IFornecedorService;
-import com.unicv.controledepedidos.services.FornecedorService;
 import com.unicv.controledepedidos.services.ServiceManager;
 import java.net.URL;
 import java.util.ArrayList;
@@ -58,9 +56,6 @@ public class GerirFornecedoresViewController implements Initializable {
 
     @FXML
     private Button btnAdicionar;
-
-    @FXML
-    private RadioButton rbCodigo;
 
     @FXML
     private RadioButton rbNome;

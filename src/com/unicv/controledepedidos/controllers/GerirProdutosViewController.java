@@ -58,9 +58,6 @@ public class GerirProdutosViewController implements Initializable {
     private Button btnAdicionar;
 
     @FXML
-    private RadioButton rbCodigo;
-
-    @FXML
     private RadioButton rbDescricao;
 
     @FXML
@@ -174,9 +171,6 @@ public class GerirProdutosViewController implements Initializable {
         toRemoveListaProdutos.clear();
     }
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         produtoService = ServiceManager.getServiceManager().getProdutoService();

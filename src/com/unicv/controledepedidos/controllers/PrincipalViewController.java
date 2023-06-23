@@ -12,8 +12,6 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -25,18 +23,6 @@ import javafx.stage.Stage;
  * @author erik
  */
 public class PrincipalViewController implements Initializable {
-
-    /**
-     * Initializes the controller class.
-     */
-//    @FXML
-//    private AnchorPane leftAnchorPane;
-//    
-//    @FXML
-//    private AnchorPane rightAnchorPane;
-////    
-    @FXML
-    private AnchorPane root;
 
     @FXML
     private Pane containerPane;
@@ -53,7 +39,7 @@ public class PrincipalViewController implements Initializable {
             containerPane.setPrefWidth(childAnchorPane.getPrefWidth());
             menu.setPrefHeight(childAnchorPane.getPrefHeight() + 50);
             Stage stage = (Stage) containerPane.getScene().getWindow();
-            stage.setHeight(childAnchorPane.getPrefHeight() + 50);
+            stage.setHeight(childAnchorPane.getPrefHeight() + 50);            
             stage.setWidth(containerPane.getPrefWidth() + menu.getPrefWidth());
         } catch (IOException ex) {
             Logger.getLogger(PrincipalViewController.class.getName()).log(Level.SEVERE, null, ex);
