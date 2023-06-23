@@ -6,20 +6,17 @@ package com.unicv.controledepedidos.controllers;
 
 import com.unicv.controledepedidos.data.ProdutoDAOJdbc;
 import com.unicv.controledepedidos.exceptions.ServiceException;
-import com.unicv.controledepedidos.model.Fornecedor;
 import com.unicv.controledepedidos.model.ItemProduto;
 import com.unicv.controledepedidos.model.Pedido;
 import com.unicv.controledepedidos.model.Produto;
-import com.unicv.controledepedidos.services.IPedidoService;
 import com.unicv.controledepedidos.services.IProdutoService;
 import com.unicv.controledepedidos.services.ProdutoService;
+import com.unicv.controledepedidos.services.ServiceManager;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,12 +24,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -148,7 +142,7 @@ public class DetalhesPedidoViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        produtoService = new ProdutoService(new ProdutoDAOJdbc());
+        produtoService = ServiceManager.getServiceManager().getProdutoService();
         ObservableList<Produto> listaProdutos = FXCollections.observableArrayList();
         try {
             listaProdutos.setAll(produtoService.findAll());
@@ -158,7 +152,7 @@ public class DetalhesPedidoViewController implements Initializable {
         }
 
         ObservableList<ItemProduto> emptyListaProduto = FXCollections.emptyObservableList();
-        tblItemProduto.setItems(emptyListaProduto);
+        tblItemProduto.setItems(emptyListaProduto);    
         tblItemProduto.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
             if (oldValue != null) {
                 txtQuantidadeProduto.setText(null);

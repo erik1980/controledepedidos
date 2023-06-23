@@ -4,11 +4,10 @@
  */
 package com.unicv.controledepedidos.controllers;
 
-import com.unicv.controledepedidos.data.ProdutoDAOJdbc;
 import com.unicv.controledepedidos.exceptions.ServiceException;
 import com.unicv.controledepedidos.model.Produto;
 import com.unicv.controledepedidos.services.IProdutoService;
-import com.unicv.controledepedidos.services.ProdutoService;
+import com.unicv.controledepedidos.services.ServiceManager;
 import javafx.scene.control.TextField;
 import java.net.URL;
 import java.util.ArrayList;
@@ -180,7 +179,7 @@ public class GerirProdutosViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        produtoService = new ProdutoService(new ProdutoDAOJdbc());
+        produtoService = ServiceManager.getServiceManager().getProdutoService();
         listaProdutos = FXCollections.emptyObservableList();
         try {
             listaProdutos = FXCollections.observableList(produtoService.findAll());

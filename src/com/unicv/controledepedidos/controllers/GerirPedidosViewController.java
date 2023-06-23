@@ -13,6 +13,7 @@ import com.unicv.controledepedidos.services.FornecedorService;
 import com.unicv.controledepedidos.services.IFornecedorService;
 import com.unicv.controledepedidos.services.IPedidoService;
 import com.unicv.controledepedidos.services.PedidoService;
+import com.unicv.controledepedidos.services.ServiceManager;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -220,8 +221,8 @@ public class GerirPedidosViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        pedidoService = new PedidoService(new PedidoDAOJdbc());
-        fornecedorService = new FornecedorService(new FornecedorDAOJdbc());
+        pedidoService = ServiceManager.getServiceManager().getPedidoService();
+        fornecedorService = ServiceManager.getServiceManager().getFornecedorService();
         listaPedidos = FXCollections.emptyObservableList();
         listaFornecedores = FXCollections.emptyObservableList();
         try {
@@ -263,8 +264,6 @@ public class GerirPedidosViewController implements Initializable {
             }
         };
         tcolNomeFornecedor.setCellFactory(TextFieldTableCell.forTableColumn(fornecedorStringConverter));
-        cmbFornecedores.getItems().setAll(listaFornecedores);
-        cmbFornecedores.setConverter(fornecedorStringConverter);
         //Criar cell com Button para ver os itens de cada pedido na TableView      
         tcolDetalhes.setCellFactory((TableColumn<Pedido, Void> param) -> {
             final TableCell<Pedido, Void> cell = new TableCell<Pedido, Void>() {
@@ -313,19 +312,20 @@ public class GerirPedidosViewController implements Initializable {
             if (newValue != null) {
                 txtCodigo.setText(Integer.toString(newValue.getCodigo()));
                 dtpData.setValue(newValue.getData());
-                //Isso aconetce por desajeitado.
                 Optional<Fornecedor> optionalFornecedor = listaFornecedores.stream()
                         .filter(fornecedor -> newValue.getFornecedor() != null && fornecedor.getId() == newValue.getFornecedor().getId())
                         .findFirst();
+
                 if (optionalFornecedor.isPresent()) {
                     cmbFornecedores.setValue(optionalFornecedor.get());
                 }
 
                 //nós não podemos fazer isso
-                //cmbFornecedores.setValue(newValue.getFornecedor());
+             //   cmbFornecedores.setValue(newValue.getFornecedor());
             }
         });
-
+        cmbFornecedores.getItems().setAll(listaFornecedores);
+        cmbFornecedores.setConverter(fornecedorStringConverter);
     }
 
     private Optional<ButtonType> showAlertMessage(Alert.AlertType type, String title,

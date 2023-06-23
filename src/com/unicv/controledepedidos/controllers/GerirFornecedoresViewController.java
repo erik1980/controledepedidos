@@ -9,6 +9,7 @@ import com.unicv.controledepedidos.exceptions.ServiceException;
 import com.unicv.controledepedidos.model.Fornecedor;
 import com.unicv.controledepedidos.services.IFornecedorService;
 import com.unicv.controledepedidos.services.FornecedorService;
+import com.unicv.controledepedidos.services.ServiceManager;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -184,7 +185,7 @@ public class GerirFornecedoresViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        fornecedorService = new FornecedorService(new FornecedorDAOJdbc());
+        fornecedorService = ServiceManager.getServiceManager().getFornecedorService();
         listaFornecedores = FXCollections.emptyObservableList();
         try {
             listaFornecedores = FXCollections.observableList(fornecedorService.findAll());
